@@ -1,0 +1,17 @@
+{
+  "name": "cocoashield-backend",
+  "version": "1.0.0",
+  "description": "Central persistent Node.js/Express backend for CocoaShield Ecosystem",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "mkcert": "^1.5.1",
+    "pg": "^8.12.0"
+  }
+}
