@@ -1,0 +1,35 @@
+{
+  "name": "cocoashield-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sistema de Vigilancia Fitosanitaria e Inteligencia Artificial para el Cultivo de Cacao Amazónico",
+  "workspaces": [
+    "apps/*",
+    "services/backend"
+  ],
+  "scripts": {
+    "build:all": "npm --prefix apps/dashboard run build && npm --prefix apps/movil run build",
+    "build:dashboard": "npm --prefix apps/dashboard run build",
+    "build:movil": "npm --prefix apps/movil run build",
+    "dev:dashboard": "npm --prefix apps/dashboard run dev",
+    "dev:movil": "npm --prefix apps/movil run dev",
+    "start:backend": "npm --prefix services/backend start",
+    "dev:backend": "npm --prefix services/backend run dev",
+    "start:ai": "cd services/ai-service && uvicorn main:app --reload --port 8000"
+  },
+  "keywords": [
+    "cacao",
+    "phytopathology",
+    "monilia",
+    "escoba-de-bruja",
+    "mazorca-negra",
+    "deep-learning",
+    "computer-vision",
+    "react",
+    "fastapi",
+    "leaflet",
+    "gis"
+  ],
+  "author": "CocoaShield Research Team",
+  "license": "MIT"
+}
