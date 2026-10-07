@@ -7,38 +7,12 @@ import { getHistory, saveDiagnosis, BACKEND_URL, runOnlineDiagnosis } from "./co
 import AutoUpdateBanner from "./components/AutoUpdateBanner";
 import {
   IconUser,
-  IconCamera,
+  IconHome,
   IconHistory
 } from "@tabler/icons-react";
 
-// ── Componente Indicador de Estado Fuera de App ──────────────────────────────
-function StatusDot({ backendStatus }) {
-  if (backendStatus === "online") return null;
-
-  const isChecking = backendStatus === "checking";
-  const color = isChecking ? "#facc15" : "#ef4444";
-  const label = isChecking ? "Conectando al servidor..." : "Servidor desconectado (Modo Offline)";
-
-  return (
-    <div style={{
-      position: "fixed", top: 10, right: 10, zIndex: 9999,
-      display: "flex", alignItems: "center", gap: 6,
-      padding: "5px 12px", borderRadius: 20,
-      background: isChecking ? "rgba(40, 30, 10, 0.88)" : "rgba(45, 15, 15, 0.88)",
-      backdropFilter: "blur(8px)",
-      border: `1px solid ${isChecking ? "rgba(250, 204, 21, 0.35)" : "rgba(239, 68, 68, 0.35)"}`,
-      fontSize: 10.5, fontWeight: 700, letterSpacing: "0.4px",
-      color: isChecking ? "#fef08a" : "#fca5a5",
-      boxShadow: "0 4px 14px rgba(0,0,0,0.35)", userSelect: "none"
-    }}>
-      <span style={{
-        width: 8, height: 8, borderRadius: "50%", backgroundColor: color,
-        display: "inline-block", flexShrink: 0
-      }} />
-      {label}
-    </div>
-  );
-}
+// El estado del servidor ahora se muestra como chip dentro del encabezado de Inicio
+// (antes era un aviso flotante que se superponía al contenido).
 
 // ── APP PRINCIPAL ─────────────────────────────────────────────────────────────
 export default function App() {
@@ -197,6 +171,9 @@ export default function App() {
           onNavigateTab={setActiveTab}
           currentUser={currentUser}
           onSelectRecord={handleSelectRecord}
+          farmerName={farmerName}
+          farmName={farmName}
+          backendStatus={backendStatus}
         />
       )}
       {(activeTab === "historial" || selectedRecord) && (
@@ -256,47 +233,29 @@ export default function App() {
 
   return (
     <div className="mobile-app-root">
-      <StatusDot backendStatus={backendStatus} />
       <div className="mobile-screen">
         {renderTabContent()}
       </div>
       {!isDetailOpen && (
-        <div className="mobile-bottom-nav">
+        <nav className="mobile-bottom-nav">
           <div className="mobile-nav-island">
             {[
-              { id: "diagnostico",   icon: <IconCamera size={20} stroke={1.8} />,   label: "Diagnóstico" },
-              { id: "historial",     icon: <IconHistory size={20} stroke={1.8} />,  label: "Historial" },
-              { id: "configuracion", icon: <IconUser size={20} stroke={1.8} />,     label: "Mi Cuenta" },
+              { id: "diagnostico",   icon: <IconHome size={22} stroke={1.8} />,    label: "Inicio" },
+              { id: "historial",     icon: <IconHistory size={22} stroke={1.8} />, label: "Historial" },
+              { id: "configuracion", icon: <IconUser size={22} stroke={1.8} />,    label: "Mi Cuenta" },
             ].map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`mobile-nav-btn ${activeTab === tab.id ? "active" : ""}`}
+                aria-current={activeTab === tab.id ? "page" : undefined}
               >
                 <span className="mobile-nav-icon">{tab.icon}</span>
                 <span className="mobile-nav-label">{tab.label}</span>
               </button>
             ))}
           </div>
-
-          {/* Botón Circular de Acción Principal en la Esquina (Cámara / Captura) */}
-          <button
-            type="button"
-            onClick={() => {
-              setActiveTab('diagnostico');
-              setTimeout(() => {
-                const fileInputs = document.querySelectorAll('input[type="file"]');
-                if (fileInputs && fileInputs.length > 0) {
-                  fileInputs[0].click();
-                }
-              }, 50);
-            }}
-            className="floating-action-fab"
-            title="Tomar Foto / Analizar Mazorca"
-          >
-            <IconCamera size={26} stroke={2} />
-          </button>
-        </div>
+        </nav>
       )}
       <AutoUpdateBanner />
     </div>

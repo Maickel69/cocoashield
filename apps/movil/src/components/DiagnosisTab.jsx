@@ -5,7 +5,11 @@ import {
   IconBrain,
   IconAlertCircle,
   IconBolt,
-  IconFolderOpen
+  IconFolderOpen,
+  IconChevronRight,
+  IconSparkles,
+  IconAlertTriangle,
+  IconCheck
 } from '@tabler/icons-react';
 import { DISEASE_CATALOG } from './Database';
 import logo from '../assets/logo.png';
@@ -134,7 +138,10 @@ export default function DiagnosisTab({
   recentHistory = [],
   onNavigateTab,
   currentUser,
-  onSelectRecord
+  onSelectRecord,
+  farmerName,
+  farmName,
+  backendStatus
 }) {
   const [capturedImage, setCapturedImage]     = useState(null);
   const [lastImgElement, setLastImgElement]   = useState(null);
@@ -281,18 +288,81 @@ export default function DiagnosisTab({
 
   return (
     <div className="tab-content animate-fade-in">
-      {/* ── Encabezado Superior con Marca ────────────────────────── */}
+      {/* ── Encabezado Ejecutivo Superior ────────────────────────── */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        padding: '6px 2px 14px',
-        marginBottom: 2
+        justifyContent: 'space-between',
+        padding: '2px 2px 14px',
+        borderBottom: '1px solid rgba(0, 0, 0, 0.06)',
+        marginBottom: 16
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <img src={logo} alt="Logo" style={{ width: 34, height: 34, borderRadius: 10, objectFit: 'cover' }} />
-          <h1 style={{ fontSize: 18, fontWeight: 800, margin: 0, color: 'var(--color-text-dark)', letterSpacing: '-0.3px' }}>
-            CocoaShield AI
-          </h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{
+            position: 'relative',
+            width: 44,
+            height: 44,
+            borderRadius: 14,
+            backgroundColor: '#E8F2EA',
+            border: '1.5px solid var(--color-accent-border)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 4px 12px rgba(44, 94, 59, 0.12)',
+            overflow: 'hidden',
+            flexShrink: 0
+          }}>
+            <img src={logo} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          </div>
+          <div>
+            <div style={{
+              fontSize: 16,
+              fontWeight: 800,
+              color: 'var(--color-text-dark)',
+              letterSpacing: '-0.3px',
+              lineHeight: 1.2
+            }}>
+              Hola, {farmerName || 'Agricultor'} 👋
+            </div>
+            <div style={{
+              fontSize: 12,
+              color: 'var(--color-text-muted)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 4,
+              marginTop: 2,
+              fontWeight: 500
+            }}>
+              <span>🌱</span>
+              <span style={{ fontWeight: 600 }}>{farmName || 'Finca San José'}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Chip de Estado Cloud AI */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+          backgroundColor: backendStatus === 'online' ? '#E6F4EA' : '#FEF7E0',
+          border: `1px solid ${backendStatus === 'online' ? '#CEEAD6' : '#FEEFC3'}`,
+          borderRadius: 20,
+          padding: '5px 10px',
+          fontSize: 11,
+          fontWeight: 700,
+          color: backendStatus === 'online' ? '#137333' : '#B06000',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+          flexShrink: 0
+        }}>
+          <span style={{
+            width: 7,
+            height: 7,
+            borderRadius: '50%',
+            backgroundColor: backendStatus === 'online' ? '#34A853' : '#FBBC04',
+            display: 'inline-block',
+            boxShadow: backendStatus === 'online' ? '0 0 6px #34A853' : 'none'
+          }} />
+          <span>{backendStatus === 'online' ? 'IA Online' : 'Local'}</span>
         </div>
       </div>
 
@@ -301,166 +371,230 @@ export default function DiagnosisTab({
         type="file"
         accept="image/*"
         capture="environment"
-        style={{ display:'none' }}
+        style={{ display: 'none' }}
         onChange={handleImageCapture}
       />
 
-      {/* ══ ESTADO: IDLE (TARJETA SMART DROPZONE & DIAGNÓSTICOS RECIENTES) ══════ */}
+      {/* ══ ESTADO: IDLE (EXECUTIVE DASHBOARD + SCANNER + CAROUSEL) ══════ */}
       {processingState === 'idle' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-          {/* Tarjeta Principal de Carga (Estilo RoomMind AI) */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+          {/* Fila de Métricas Rápidas (KPIs Fitosanitarios) */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: 10
+          }}>
+            <div style={{
+              backgroundColor: 'var(--color-bg-card)',
+              border: '1px solid var(--color-border)',
+              borderRadius: 16,
+              padding: '12px 8px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              textAlign: 'center',
+              boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
+            }}>
+              <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Escaneos
+              </span>
+              <span style={{ fontSize: 20, fontWeight: 900, color: 'var(--color-text-dark)', marginTop: 2 }}>
+                {recentHistory.length}
+              </span>
+              <span style={{ fontSize: 9.5, color: 'var(--color-primary)', fontWeight: 700, marginTop: 1 }}>
+                Totales
+              </span>
+            </div>
+
+            <div style={{
+              backgroundColor: '#FEF2F2',
+              border: '1px solid #FEE2E2',
+              borderRadius: 16,
+              padding: '12px 8px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              textAlign: 'center',
+              boxShadow: '0 2px 6px rgba(220,38,38,0.04)'
+            }}>
+              <span style={{ fontSize: 10, fontWeight: 700, color: '#991B1B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Enfermos
+              </span>
+              <span style={{ fontSize: 20, fontWeight: 900, color: '#DC2626', marginTop: 2 }}>
+                {recentHistory.filter(h => h.disease && h.disease.toLowerCase() !== 'sano').length}
+              </span>
+              <span style={{ fontSize: 9.5, color: '#DC2626', fontWeight: 700, marginTop: 1 }}>
+                Atención
+              </span>
+            </div>
+
+            <div style={{
+              backgroundColor: '#F0FDF4',
+              border: '1px solid #DCFCE7',
+              borderRadius: 16,
+              padding: '12px 8px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              textAlign: 'center',
+              boxShadow: '0 2px 6px rgba(22,101,52,0.04)'
+            }}>
+              <span style={{ fontSize: 10, fontWeight: 700, color: '#166534', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Sanos
+              </span>
+              <span style={{ fontSize: 20, fontWeight: 900, color: '#15803D', marginTop: 2 }}>
+                {recentHistory.filter(h => h.disease && h.disease.toLowerCase() === 'sano').length}
+              </span>
+              <span style={{ fontSize: 9.5, color: '#16A34A', fontWeight: 700, marginTop: 1 }}>
+                Óptimos
+              </span>
+            </div>
+          </div>
+
+          {/* Tarjeta Principal de Escaneo Unificada (Sleek Scanner Card) */}
           <div style={{
             backgroundColor: 'var(--color-bg-card)',
             borderRadius: 24,
-            border: '1px solid var(--color-border)',
-            padding: '20px 18px 22px',
-            boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
+            border: '1.5px solid var(--color-accent-border)',
+            padding: '22px 18px 20px',
+            boxShadow: '0 8px 30px rgba(44, 94, 59, 0.07)',
             display: 'flex',
             flexDirection: 'column',
-            gap: 16
+            alignItems: 'center',
+            textAlign: 'center',
+            position: 'relative',
+            overflow: 'hidden'
           }}>
-            {/* Dropzone Interior Delimitada con Borde Punteado */}
+            {/* Fondo de resplandor sutil */}
+            <div style={{
+              position: 'absolute',
+              top: -40,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: 220,
+              height: 120,
+              borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(44, 94, 59, 0.12) 0%, rgba(255,255,255,0) 70%)',
+              pointerEvents: 'none'
+            }} />
+
+            {/* Micro-composición de tarjetas apiladas con fotos / pods */}
             <div
               role="button"
               tabIndex={0}
               onClick={handleOpenCamera}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  handleOpenCamera();
-                }
-              }}
               style={{
-                borderRadius: 18,
-                border: '1.5px dashed var(--color-border)',
-                backgroundColor: 'var(--color-bg)',
-                padding: '24px 16px',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                textAlign: 'center',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
-              onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--color-primary)'; }}
-              onBlur={(e) => { e.currentTarget.style.borderColor = 'var(--color-border)'; }}
-              onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--color-primary)'; }}
-              onMouseOut={(e) => { e.currentTarget.style.borderColor = 'var(--color-border)'; }}
-            >
-              {/* Micro-composición de tarjetas apiladas con fotos reales/recientes e ícono central */}
-              <div style={{
                 position: 'relative',
-                width: 104,
-                height: 88,
-                marginBottom: 12,
+                width: 110,
+                height: 94,
+                marginBottom: 14,
+                cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'flex-end',
                 justifyContent: 'center'
+              }}
+            >
+              {/* Tarjeta 1 (Izquierda inclinada) */}
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 6,
+                width: 50,
+                height: 64,
+                borderRadius: 12,
+                overflow: 'hidden',
+                backgroundColor: '#9FBFA7',
+                border: '2px solid #FFFFFF',
+                transform: 'rotate(-14deg)',
+                boxShadow: '0 6px 14px rgba(0,0,0,0.12)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 1
               }}>
-                {/* 1. Tarjeta Trasera Izquierda (Foto 3 o Fallback) - Inclinada hacia la izquierda */}
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 6,
-                  width: 48,
-                  height: 60,
-                  borderRadius: 12,
-                  overflow: 'hidden',
-                  backgroundColor: '#9FBFA7',
-                  border: '1.5px solid var(--color-bg-card)',
-                  transform: 'rotate(-14deg)',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  zIndex: 1
-                }}>
-                  {renderHistoryCardThumbnail(recentHistory[2], "Foto previa 3", '#406349')}
-                </div>
-
-                {/* 2. Tarjeta Trasera Derecha (Foto 2 o Fallback) - Inclinada hacia la derecha */}
-                <div style={{
-                  position: 'absolute',
-                  top: 2,
-                  right: 6,
-                  width: 48,
-                  height: 60,
-                  borderRadius: 12,
-                  overflow: 'hidden',
-                  backgroundColor: '#B5C4D4',
-                  border: '1.5px solid var(--color-bg-card)',
-                  transform: 'rotate(13deg)',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  zIndex: 2
-                }}>
-                  {renderHistoryCardThumbnail(recentHistory[1], "Foto previa 2", '#7D6385')}
-                </div>
-
-                {/* 3. Tarjeta Media Central (Foto 1 o Fallback) - Al frente de las otras dos */}
-                <div style={{
-                  position: 'absolute',
-                  top: 8,
-                  left: '50%',
-                  transform: 'translateX(-50%) rotate(-2deg)',
-                  width: 50,
-                  height: 62,
-                  borderRadius: 12,
-                  overflow: 'hidden',
-                  backgroundColor: '#C59567',
-                  border: '2px solid var(--color-bg-card)',
-                  boxShadow: '0 4px 14px rgba(0,0,0,0.14)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  zIndex: 3
-                }}>
-                  {renderHistoryCardThumbnail(recentHistory[0], "Foto más reciente", '#A45D38')}
-                </div>
-
-                {/* 4. Círculo blanco frontal protagonista con ícono de cámara superpuesto abajo */}
-                <div style={{
-                  position: 'relative',
-                  width: 54,
-                  height: 54,
-                  borderRadius: '50%',
-                  backgroundColor: 'var(--color-bg-card)',
-                  boxShadow: '0 6px 18px rgba(0,0,0,0.18)',
-                  border: '2px solid var(--color-bg-card)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: 'var(--color-primary)',
-                  zIndex: 4,
-                  marginBottom: -4
-                }}>
-                  <IconCamera size={26} stroke={2} />
-                </div>
+                {renderHistoryCardThumbnail(recentHistory[2], "Foto 3", '#406349')}
               </div>
 
-              {/* Título de acción de la dropzone */}
-              <h3 style={{ fontSize: 14, fontWeight: 700, margin: '0 0 6px', color: 'var(--color-text-dark)' }}>
-                Toma una foto o sube desde la galería
-              </h3>
+              {/* Tarjeta 2 (Derecha inclinada) */}
+              <div style={{
+                position: 'absolute',
+                top: 2,
+                right: 6,
+                width: 50,
+                height: 64,
+                borderRadius: 12,
+                overflow: 'hidden',
+                backgroundColor: '#B5C4D4',
+                border: '2px solid #FFFFFF',
+                transform: 'rotate(13deg)',
+                boxShadow: '0 6px 14px rgba(0,0,0,0.12)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 2
+              }}>
+                {renderHistoryCardThumbnail(recentHistory[1], "Foto 2", '#7D6385')}
+              </div>
 
-              {/* Texto de recomendación técnica en campo */}
-              <p style={{ fontSize: 11.5, color: 'var(--color-text-muted)', margin: 0, lineHeight: 1.45, maxWidth: 260 }}>
-                Para máxima certeza, enfoca el fruto de cacao con buena iluminación a 20-30 cm.
-              </p>
+              {/* Tarjeta 3 (Centro) */}
+              <div style={{
+                position: 'absolute',
+                top: 8,
+                left: '50%',
+                transform: 'translateX(-50%) rotate(-2deg)',
+                width: 54,
+                height: 68,
+                borderRadius: 14,
+                overflow: 'hidden',
+                backgroundColor: '#C59567',
+                border: '2px solid #FFFFFF',
+                boxShadow: '0 8px 18px rgba(0,0,0,0.16)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 3
+              }}>
+                {renderHistoryCardThumbnail(recentHistory[0], "Foto reciente", '#A45D38')}
+              </div>
+
+              {/* Botón flotante central con cámara */}
+              <div style={{
+                position: 'relative',
+                width: 52,
+                height: 52,
+                borderRadius: '50%',
+                backgroundColor: 'var(--color-primary)',
+                boxShadow: '0 8px 20px rgba(44, 94, 59, 0.4)',
+                border: '3px solid #FFFFFF',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#FFFFFF',
+                zIndex: 4,
+                marginBottom: -4
+              }}>
+                <IconCamera size={26} stroke={2.2} />
+              </div>
             </div>
 
-            {/* Botón Principal de Acción (Píldora CTA de Alto Contraste) */}
-            <div style={{ display: 'flex', gap: 10 }}>
+            {/* Título y subtítulo */}
+            <h3 style={{ fontSize: 16, fontWeight: 800, margin: '0 0 6px', color: 'var(--color-text-dark)', letterSpacing: '-0.2px' }}>
+              Diagnóstico Fitosanitario IA
+            </h3>
+            <p style={{ fontSize: 12, color: 'var(--color-text-muted)', margin: '0 0 16px', lineHeight: 1.45, maxWidth: 300 }}>
+              Detecta Monilia, Mazorca Negra y Escoba de Bruja al instante con visión artificial botánica.
+            </p>
+
+            {/* Fila de Acciones Principales */}
+            <div style={{ display: 'flex', gap: 10, width: '100%' }}>
               <button
                 type="button"
                 onClick={handleOpenCamera}
                 style={{
                   flex: 1,
-                  padding: '13px 20px',
-                  borderRadius: 9999,
-                  backgroundColor: 'var(--color-primary)',
+                  padding: '14px 20px',
+                  borderRadius: 16,
+                  background: 'linear-gradient(135deg, #2C5E3B 0%, #1c4228 100%)',
                   color: '#FFFFFF',
                   fontSize: 14,
                   fontWeight: 800,
@@ -470,24 +604,24 @@ export default function DiagnosisTab({
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: 8,
-                  boxShadow: '0 4px 14px rgba(44, 94, 59, 0.3)',
+                  boxShadow: '0 6px 20px rgba(44, 94, 59, 0.35)',
                   transition: 'transform 0.15s ease'
                 }}
                 onMouseDown={e => e.currentTarget.style.transform = 'scale(0.98)'}
                 onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
               >
-                <IconCamera size={18} stroke={2} />
+                <IconCamera size={19} stroke={2.2} />
                 <span>Tomar Foto de Mazorca</span>
               </button>
 
               <button
                 type="button"
                 onClick={handleOpenGallery}
-                title="Abrir galería de fotos"
+                title="Subir desde galería"
                 style={{
-                  width: 46,
-                  height: 46,
-                  borderRadius: '50%',
+                  width: 50,
+                  height: 50,
+                  borderRadius: 16,
                   backgroundColor: 'var(--color-bg)',
                   border: '1.5px solid var(--color-border)',
                   color: 'var(--color-text-dark)',
@@ -496,22 +630,56 @@ export default function DiagnosisTab({
                   justifyContent: 'center',
                   cursor: 'pointer',
                   flexShrink: 0,
-                  transition: 'transform 0.15s ease'
+                  transition: 'all 0.15s ease',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.03)'
                 }}
                 onMouseDown={e => e.currentTarget.style.transform = 'scale(0.94)'}
                 onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
               >
-                <IconFolderOpen size={20} stroke={1.8} />
+                <IconFolderOpen size={22} stroke={1.8} />
               </button>
+            </div>
+
+            {/* Tip de campo */}
+            <div style={{
+              marginTop: 14,
+              padding: '8px 12px',
+              borderRadius: 12,
+              backgroundColor: 'var(--color-bg)',
+              border: '1px solid var(--color-border)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              width: '100%',
+              boxSizing: 'border-box'
+            }}>
+              <span style={{ fontSize: 13 }}>💡</span>
+              <span style={{ fontSize: 11, color: 'var(--color-text-muted)', textAlign: 'left', lineHeight: 1.35 }}>
+                Enfoca el fruto a 20-30 cm con buena iluminación natural para 95%+ de certeza.
+              </span>
             </div>
           </div>
 
-          {/* Sección Inferior: Diagnósticos Recientes ("Recent Photos / View All") */}
+          {/* Sección Inferior: Diagnósticos Recientes */}
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-              <h3 style={{ fontSize: 15, fontWeight: 800, margin: 0, color: 'var(--color-text-dark)' }}>
-                Diagnósticos Recientes
-              </h3>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <h3 style={{ fontSize: 15, fontWeight: 800, margin: 0, color: 'var(--color-text-dark)' }}>
+                  Diagnósticos Recientes
+                </h3>
+                {recentHistory.length > 0 && (
+                  <span style={{
+                    fontSize: 10,
+                    fontWeight: 700,
+                    backgroundColor: 'var(--color-accent)',
+                    color: 'var(--color-primary)',
+                    padding: '2px 7px',
+                    borderRadius: 10
+                  }}>
+                    {recentHistory.length}
+                  </span>
+                )}
+              </div>
               <button
                 type="button"
                 onClick={() => onNavigateTab?.('historial')}
@@ -522,10 +690,14 @@ export default function DiagnosisTab({
                   fontSize: 12.5,
                   fontWeight: 700,
                   cursor: 'pointer',
-                  padding: '2px 4px'
+                  padding: '2px 4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 2
                 }}
               >
-                Ver Todos
+                <span>Ver todos</span>
+                <IconChevronRight size={14} stroke={2.5} />
               </button>
             </div>
 
@@ -536,11 +708,14 @@ export default function DiagnosisTab({
                 gap: 12,
                 overflowX: 'auto',
                 paddingBottom: 8,
-                scrollbarWidth: 'none'
+                scrollbarWidth: 'none',
+                WebkitOverflowScrolling: 'touch'
               }}>
-                {recentHistory.slice(0, 5).map((item) => {
+                {recentHistory.slice(0, 6).map((item) => {
                   const diseaseInfo = DISEASE_CATALOG[item.disease] || DISEASE_CATALOG['Sano'];
                   const photoSrc = item.photo || item.image;
+                  const isHealthy = item.disease && item.disease.toLowerCase() === 'sano';
+
                   return (
                     <div
                       key={item.id}
@@ -564,18 +739,21 @@ export default function DiagnosisTab({
                         }
                       }}
                       style={{
-                        minWidth: 100,
-                        maxWidth: 100,
-                        borderRadius: 16,
+                        minWidth: 120,
+                        maxWidth: 120,
+                        borderRadius: 18,
                         overflow: 'hidden',
                         backgroundColor: 'var(--color-bg-card)',
                         border: '1px solid var(--color-border)',
                         cursor: 'pointer',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-                        flexShrink: 0
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.04)',
+                        flexShrink: 0,
+                        transition: 'transform 0.15s ease'
                       }}
+                      onMouseDown={e => e.currentTarget.style.transform = 'scale(0.97)'}
+                      onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
                     >
-                      <div style={{ width: 100, height: 95, position: 'relative', backgroundColor: '#E2EBF0' }}>
+                      <div style={{ width: 120, height: 105, position: 'relative', backgroundColor: '#E2EBF0' }}>
                         {photoSrc ? (
                           <img
                             src={photoSrc}
@@ -587,21 +765,22 @@ export default function DiagnosisTab({
                         )}
                         <span style={{
                           position: 'absolute',
-                          bottom: 4,
-                          left: 4,
-                          fontSize: 8.5,
+                          bottom: 6,
+                          left: 6,
+                          fontSize: 9,
                           fontWeight: 800,
-                          backgroundColor: 'rgba(0,0,0,0.7)',
+                          backgroundColor: isHealthy ? 'rgba(44, 94, 59, 0.88)' : 'rgba(217, 48, 37, 0.88)',
                           color: '#FFFFFF',
-                          padding: '1px 5px',
-                          borderRadius: 6
+                          padding: '2px 6px',
+                          borderRadius: 8,
+                          backdropFilter: 'blur(4px)'
                         }}>
                           {item.certainty}%
                         </span>
                       </div>
-                      <div style={{ padding: '6px 8px' }}>
+                      <div style={{ padding: '8px 10px' }}>
                         <div style={{
-                          fontSize: 11,
+                          fontSize: 11.5,
                           fontWeight: 800,
                           color: 'var(--color-text-dark)',
                           whiteSpace: 'nowrap',
@@ -611,11 +790,12 @@ export default function DiagnosisTab({
                           {diseaseInfo.name}
                         </div>
                         <div style={{
-                          fontSize: 9.5,
+                          fontSize: 10,
                           color: 'var(--color-text-muted)',
                           whiteSpace: 'nowrap',
                           overflow: 'hidden',
-                          textOverflow: 'ellipsis'
+                          textOverflow: 'ellipsis',
+                          marginTop: 2
                         }}>
                           {item.locationName || 'Finca'}
                         </div>
@@ -628,13 +808,15 @@ export default function DiagnosisTab({
               <div style={{
                 textAlign: 'center',
                 padding: '24px 16px',
-                borderRadius: 16,
+                borderRadius: 18,
                 backgroundColor: 'var(--color-bg-card)',
-                border: '1px dashed var(--color-border)',
+                border: '1.5px dashed var(--color-border)',
                 color: 'var(--color-text-muted)',
                 fontSize: 12
               }}>
-                Aún no tienes fotos recientes registradas. Tu primera captura aparecerá aquí.
+                <div style={{ fontSize: 24, marginBottom: 6 }}>📸</div>
+                <div style={{ fontWeight: 700, color: 'var(--color-text-dark)', marginBottom: 2 }}>Sin diagnósticos previos</div>
+                <div>Toma tu primera foto para ver el análisis aquí.</div>
               </div>
             )}
           </div>
