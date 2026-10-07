@@ -1,0 +1,8 @@
+{
+  "versionCode": 1,
+  "versionName": "1.0.0",
+  "apkUrl": "https://github.com/Maickel69/cocoashield/releases/download/v1.0.0/cocoashield-v1.0.0.apk",
+  "releaseNotes": "Versión 1.0.0 nativa en Kotlin con Jetpack Compose, Room Database SQLite y soporte offline integral.",
+  "mandatory": false,
+  "publishedAt": "2026-10-07T16:45:00Z"
+}
