@@ -4,14 +4,15 @@ import {
   AlertTriangle, Search, Download, X,
   MapPin, User, Cpu, Send, Sparkles, Info, LogOut,
   Shield, Activity, Users, BarChart3, Lock, Eye, EyeOff,
-  ShieldAlert, Sun, Moon
+  ShieldAlert, Sun, Moon, ArrowUpRight, TrendingUp, CheckCircle2, ChevronRight, FileText
 } from "lucide-react";
 import {
-  ResponsiveContainer, LineChart, Line, XAxis, YAxis,
+  ResponsiveContainer, AreaChart, Area, LineChart, Line, XAxis, YAxis,
   CartesianGrid, Tooltip, Legend, PieChart, Pie, Cell
 } from "recharts";
 import { MONTHLY_OUTBREAKS, CASES_TABLE } from "./data/mockData";
 import GisMap from "./components/GisMap";
+import logo from "./assets/logo.png";
 
 const BACKEND_URL = import.meta.env.VITE_API_URL || "https://cocoashield-backend.onrender.com";
 
@@ -493,7 +494,7 @@ export default function App() {
     cases.forEach(c => { if(c.diagnosis==="Monilia")m++; if(c.diagnosis==="Escoba de Bruja")e++; if(c.diagnosis==="Mazorca Negra")n++; });
     const t = m+e+n||1;
     return [
-      { name:"Monilia del Cacao", value:m, color:"#005088", pct:Math.round(m/t*100) },
+      { name:"Monilia del Cacao", value:m, color:"#38BDF8", pct:Math.round(m/t*100) },
       { name:"Escoba de Bruja",   value:e, color:"#11CAA0", pct:Math.round(e/t*100) },
       { name:"Mazorca Negra",     value:n, color:"#F59E0B", pct:Math.round(n/t*100) }
     ];
@@ -586,23 +587,37 @@ export default function App() {
 
       {/* Barra lateral / Sidebar */}
       <aside className="sidebar">
-        <div className="sidebar-header">
-          <div className="logo-badge" style={{ fontSize:20 }}>🌿</div>
+        <div className="sidebar-header" style={{ padding: "20px", display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{
+            width: 42,
+            height: 42,
+            borderRadius: 12,
+            overflow: "hidden",
+            boxShadow: "0 4px 14px rgba(17,202,160,0.3)",
+            border: "1.5px solid rgba(17,202,160,0.4)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "#0B192C",
+            flexShrink: 0
+          }}>
+            <img src={logo} alt="CocoaShield AI" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          </div>
           <div className="brand-info">
-            <span className="brand-name">CocoaShield</span>
-            <span className="brand-tagline">Panel Central</span>
+            <span className="brand-name" style={{ fontSize: 16, fontWeight: 800, letterSpacing: "-0.3px", color: "#FFFFFF" }}>CocoaShield</span>
+            <span className="brand-tagline" style={{ fontSize: 10.5, fontWeight: 700, color: "#11CAA0", textTransform: "uppercase", letterSpacing: "0.8px" }}>Panel Central</span>
           </div>
         </div>
 
         <nav className="sidebar-nav">
-          <p style={{ fontSize:10, fontWeight:700, textTransform:"uppercase", letterSpacing:"1.5px", color:"rgba(255,255,255,0.25)", padding:"12px 20px 6px" }}>Navegacion</p>
+          <p style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "1.5px", color: "rgba(255,255,255,0.3)", padding: "14px 20px 8px" }}>Navegación</p>
           {[
-            { id:"dashboard", icon:<LayoutDashboard size={16}/>, label:"Inicio General" },
-            { id:"map",       icon:<MapIcon size={16}/>,          label:"Mapa Epidemiologico" },
-            { id:"reports",   icon:<FileSpreadsheet size={16}/>,  label:"Reportes y Recetas" }
+            { id: "dashboard", icon: <LayoutDashboard size={17} />, label: "Inicio General" },
+            { id: "map",       icon: <MapIcon size={17} />,          label: "Mapa Epidemiológico" },
+            { id: "reports",   icon: <FileSpreadsheet size={17} />,  label: "Reportes y Recetas" }
           ].map(it => (
             <button key={it.id} onClick={() => setActiveSection(it.id)}
-              className={`nav-item ${activeSection===it.id?"active":""}`}>
+              className={`nav-item ${activeSection === it.id ? "active" : ""}`}>
               {it.icon}<span>{it.label}</span>
             </button>
           ))}
@@ -658,9 +673,9 @@ export default function App() {
       <main className="main-wrapper">
         <header className="top-navbar">
           <div className="page-title-group">
-            {activeSection==="dashboard" && <><h1>Panel Analitico</h1><p>Monitoreo fitosanitario del cacao en tiempo real</p></>}
-            {activeSection==="map"       && <><h1>Mapa Epidemiologico</h1><p>Distribucion geografica de brotes activos</p></>}
-            {activeSection==="reports"   && <><h1>Reportes y Recetas</h1><p>Historial de diagnosticos IA y fichas agronomicas</p></>}
+            {activeSection === "dashboard" && <><h1>Panel Analítico</h1><p>Monitoreo fitosanitario del cacao en tiempo real · Amazonía y Valles Productores</p></>}
+            {activeSection === "map"       && <><h1>Mapa Epidemiológico</h1><p>Distribución geográfica de brotes activos e incidencia territorial</p></>}
+            {activeSection === "reports"   && <><h1>Reportes y Recetas</h1><p>Historial de diagnósticos IA, trazabilidad y fichas agronómicas</p></>}
           </div>
           <div className="top-nav-actions">
             <button
@@ -674,11 +689,11 @@ export default function App() {
 
             <div className="sync-status-indicator">
               <span className="sync-dot-blink" style={{
-                backgroundColor: backendStatus==="connected" ? "#11CAA0" : backendStatus==="offline" ? "#EF4444" : "#F59E0B",
-                boxShadow: backendStatus==="connected" ? "0 0 0 3px rgba(17,202,160,0.25)" : "none"
+                backgroundColor: backendStatus === "connected" ? "#11CAA0" : backendStatus === "offline" ? "#EF4444" : "#F59E0B",
+                boxShadow: backendStatus === "connected" ? "0 0 0 3px rgba(17,202,160,0.25)" : "none"
               }}/>
-              <span style={{ color: backendStatus==="offline" ? "#EF4444" : undefined }}>
-                {backendStatus==="connected" ? "En linea — Tiempo Real" : backendStatus==="offline" ? "Sin conexion" : "Conectando..."}
+              <span style={{ color: backendStatus === "offline" ? "#EF4444" : undefined }}>
+                {backendStatus === "connected" ? "En línea — Tiempo Real" : backendStatus === "offline" ? "Sin conexión" : "Conectando..."}
               </span>
             </div>
           </div>
@@ -686,7 +701,7 @@ export default function App() {
 
         <div className="content-body">
           {/* DASHBOARD PRINCIPAL */}
-          {activeSection==="dashboard" && (
+          {activeSection === "dashboard" && (
             <>
               <section className="kpi-row">
                 {[
@@ -696,6 +711,7 @@ export default function App() {
                     value: metrics.totalScans,
                     trend: "+12% este mes",
                     trendType: "pos",
+                    subtitle: "Sincronizados en nube",
                     accent: "linear-gradient(90deg, #0284C7, #38BDF8)",
                     iconBg: "rgba(2, 132, 199, 0.12)"
                   },
@@ -705,15 +721,17 @@ export default function App() {
                     value: metrics.alerts,
                     trend: "Requieren atención",
                     trendType: "neg",
+                    subtitle: "Brotes fúngicos activos",
                     accent: "linear-gradient(90deg, #DC2626, #EF4444)",
                     iconBg: "rgba(239, 68, 68, 0.12)"
                   },
                   {
-                    icon: <Cpu size={20} color="#F59E0B" />,
+                    icon: <ShieldAlert size={20} color="#F59E0B" />,
                     title: "Patógeno Predominante",
                     value: metrics.top,
                     trend: "Incidencia prioritaria",
                     trendType: "warn",
+                    subtitle: "Moniliophthora roreri",
                     accent: "linear-gradient(90deg, #D97706, #F59E0B)",
                     iconBg: "rgba(245, 158, 11, 0.12)",
                     isText: true
@@ -724,6 +742,7 @@ export default function App() {
                     value: metrics.farmers,
                     trend: "13 brigadas activas",
                     trendType: "pos",
+                    subtitle: "Red satelital conectada",
                     accent: "linear-gradient(90deg, #059669, #10B981)",
                     iconBg: "rgba(16, 185, 129, 0.12)"
                   }
@@ -738,6 +757,9 @@ export default function App() {
                     <div className="kpi-card-v2-body">
                       <div className="kpi-card-v2-value" style={{ fontSize: k.isText ? 21 : 34 }}>
                         {k.value}
+                      </div>
+                      <div style={{ fontSize: 11, color: "var(--color-text-muted)", marginTop: 4, fontWeight: 500 }}>
+                        {k.subtitle}
                       </div>
                     </div>
                     <div className="kpi-card-v2-footer">
@@ -766,56 +788,124 @@ export default function App() {
               </section>
 
               <section className="charts-row">
+                {/* Gráfico 1: Área temporal con gradientes suaves */}
                 <div className="panel-card">
                   <div className="panel-card-header">
-                    <div className="panel-card-title-group"><h2>Evolucion Temporal de Brotes</h2><p>Registros mensuales por enfermedad</p></div>
+                    <div className="panel-card-title-group">
+                      <h2>Evolución Temporal de Brotes</h2>
+                      <p>Dinámica epidemiológica mensual por patógeno identificado</p>
+                    </div>
+                    <span style={{
+                      fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 12,
+                      backgroundColor: "var(--color-card-subtle)", color: "var(--color-text-muted)",
+                      border: "1px solid var(--color-border)"
+                    }}>
+                      Año 2026 · Activo
+                    </span>
                   </div>
-                  <div className="chart-viewport">
+                  <div className="chart-viewport" style={{ height: 310 }}>
                     <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={monthlyData} margin={{ top:10, right:30, left:0, bottom:0 }}>
+                      <AreaChart data={monthlyData} margin={{ top: 10, right: 20, left: -10, bottom: 0 }}>
+                        <defs>
+                          <linearGradient id="colorMonilia" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#38BDF8" stopOpacity={0.35}/>
+                            <stop offset="95%" stopColor="#38BDF8" stopOpacity={0.0}/>
+                          </linearGradient>
+                          <linearGradient id="colorEscoba" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#11CAA0" stopOpacity={0.35}/>
+                            <stop offset="95%" stopColor="#11CAA0" stopOpacity={0.0}/>
+                          </linearGradient>
+                          <linearGradient id="colorMazorca" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#F59E0B" stopOpacity={0.35}/>
+                            <stop offset="95%" stopColor="#F59E0B" stopOpacity={0.0}/>
+                          </linearGradient>
+                        </defs>
                         <CartesianGrid strokeDasharray="3 3" stroke={theme === "dark" ? "rgba(255,255,255,0.06)" : "#F1F5F9"}/>
                         <XAxis dataKey="month" stroke={theme === "dark" ? "#64748B" : "#94A3B8"} fontSize={11} fontWeight={600}/>
                         <YAxis stroke={theme === "dark" ? "#64748B" : "#94A3B8"} fontSize={11} fontWeight={600}/>
                         <Tooltip contentStyle={{
-                          borderRadius:12,
-                          border: theme === "dark" ? "1px solid rgba(255,255,255,0.1)" : "1px solid #E2E8F0",
-                          boxShadow:"0 8px 24px rgba(0,0,0,0.25)",
+                          borderRadius: 14,
+                          border: theme === "dark" ? "1px solid rgba(255,255,255,0.12)" : "1px solid #E2E8F0",
+                          boxShadow: "0 12px 28px rgba(0,0,0,0.3)",
                           backgroundColor: theme === "dark" ? "#121C30" : "#FFFFFF",
                           color: theme === "dark" ? "#F8FAFC" : "#0F172A",
-                          fontFamily:"Outfit,sans-serif"
+                          fontFamily: "Outfit,sans-serif"
                         }}/>
-                        <Legend wrapperStyle={{ fontSize:12, fontWeight:600 }}/>
-                        <Line type="monotone" dataKey="Monilia" stroke="#38BDF8" strokeWidth={2.5} activeDot={{ r:6 }}/>
-                        <Line type="monotone" dataKey="EscobaDebruja" stroke="#11CAA0" strokeWidth={2.5} name="Escoba de Bruja"/>
-                        <Line type="monotone" dataKey="MazorcaNegra" stroke="#F59E0B" strokeWidth={2.5} name="Mazorca Negra"/>
-                      </LineChart>
+                        <Legend wrapperStyle={{ fontSize: 12, fontWeight: 600, paddingTop: 10 }}/>
+                        <Area type="monotone" dataKey="Monilia" stroke="#38BDF8" strokeWidth={2.8} fillOpacity={1} fill="url(#colorMonilia)" activeDot={{ r: 6 }}/>
+                        <Area type="monotone" dataKey="EscobaDebruja" stroke="#11CAA0" strokeWidth={2.8} name="Escoba de Bruja" fillOpacity={1} fill="url(#colorEscoba)"/>
+                        <Area type="monotone" dataKey="MazorcaNegra" stroke="#F59E0B" strokeWidth={2.8} name="Mazorca Negra" fillOpacity={1} fill="url(#colorMazorca)"/>
+                      </AreaChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
 
+                {/* Gráfico 2: Donut con centro informativo y barras de progreso */}
                 <div className="panel-card">
                   <div className="panel-card-header">
-                    <div className="panel-card-title-group"><h2>Distribucion de Patogenos</h2><p>Porcentaje acumulado</p></div>
+                    <div className="panel-card-title-group">
+                      <h2>Distribución de Patógenos</h2>
+                      <p>Proporción y carga biológica acumulada</p>
+                    </div>
                   </div>
-                  <div className="chart-viewport" style={{ flexDirection:"column" }}>
-                    <ResponsiveContainer width="100%" height={190}>
-                      <PieChart>
-                        <Pie data={pie} cx="50%" cy="50%" innerRadius={55} outerRadius={78} paddingAngle={3} dataKey="value">
-                          {pie.map((e,i) => <Cell key={i} fill={e.color}/>)}
-                        </Pie>
-                        <Tooltip formatter={v => [`${v} casos`,"Frecuencia"]} contentStyle={{
-                          borderRadius:10,
-                          backgroundColor: theme === "dark" ? "#121C30" : "#FFFFFF",
-                          border: theme === "dark" ? "1px solid rgba(255,255,255,0.1)" : "1px solid #E2E8F0",
-                          color: theme === "dark" ? "#F8FAFC" : "#0F172A"
-                        }}/>
-                      </PieChart>
-                    </ResponsiveContainer>
-                    <div className="custom-legend-grid">
-                      {pie.map((e,i) => (
-                        <div key={i} className="legend-item">
-                          <div className="legend-label-group"><span className="legend-dot" style={{ backgroundColor:e.color }}/><span>{e.name}</span></div>
-                          <span className="legend-percent">{e.value} casos ({e.pct}%)</span>
+                  <div className="chart-viewport" style={{ height: 310, flexDirection: "column", justifyContent: "space-between" }}>
+                    <div style={{ position: "relative", width: "100%", height: 180 }}>
+                      <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                          <Pie
+                            data={pie}
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={56}
+                            outerRadius={78}
+                            paddingAngle={4}
+                            dataKey="value"
+                          >
+                            {pie.map((e, i) => <Cell key={i} fill={e.color}/>)}
+                          </Pie>
+                          <Tooltip
+                            formatter={v => [`${v} casos`, "Frecuencia"]}
+                            contentStyle={{
+                              borderRadius: 10,
+                              backgroundColor: theme === "dark" ? "#121C30" : "#FFFFFF",
+                              border: theme === "dark" ? "1px solid rgba(255,255,255,0.1)" : "1px solid #E2E8F0",
+                              color: theme === "dark" ? "#F8FAFC" : "#0F172A"
+                            }}
+                          />
+                        </PieChart>
+                      </ResponsiveContainer>
+                      {/* Centro del Donut */}
+                      <div style={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        textAlign: "center",
+                        pointerEvents: "none"
+                      }}>
+                        <div style={{ fontSize: 22, fontWeight: 900, color: "var(--color-text-dark)", lineHeight: 1 }}>
+                          {pie.reduce((acc, c) => acc + c.value, 0)}
+                        </div>
+                        <div style={{ fontSize: 9.5, fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.5px", marginTop: 2 }}>
+                          Brotes
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Barras de porcentaje y leyenda */}
+                    <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 8, marginTop: 4 }}>
+                      {pie.map((e, i) => (
+                        <div key={i} style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, fontWeight: 700 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 6, color: "var(--color-text-dark)" }}>
+                              <span style={{ width: 8, height: 8, borderRadius: "50%", backgroundColor: e.color }} />
+                              <span>{e.name}</span>
+                            </div>
+                            <span style={{ color: "var(--color-text-muted)" }}>{e.value} casos ({e.pct}%)</span>
+                          </div>
+                          <div style={{ width: "100%", height: 5, backgroundColor: "var(--color-card-subtle)", borderRadius: 4, overflow: "hidden" }}>
+                            <div style={{ width: `${e.pct}%`, height: "100%", backgroundColor: e.color, borderRadius: 4, transition: "width 0.4s ease" }} />
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -823,45 +913,223 @@ export default function App() {
                 </div>
               </section>
 
-              <section className="panel-card" style={{ marginTop:24 }}>
-                <div className="panel-card-header">
-                  <div className="panel-card-title-group">
-                    <h2 style={{ display:"flex", alignItems:"center", gap:8 }}><BarChart3 size={17} color="#11CAA0"/>Ultimos Diagnosticos</h2>
-                    <p>Los casos mas recientes registrados en el sistema</p>
+              {/* Sección Inferior Dividida: Diagnósticos Recientes + Protocolo de Acción Inmediata */}
+              <section className="dashboard-bottom-grid" style={{ display: "grid", gridTemplateColumns: "3fr 2fr", gap: 20 }}>
+                {/* Columna Izquierda: Últimos Diagnósticos */}
+                <div className="panel-card">
+                  <div className="panel-card-header">
+                    <div className="panel-card-title-group">
+                      <h2 style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <BarChart3 size={17} color="#11CAA0" />
+                        Últimos Diagnósticos en Campo
+                      </h2>
+                      <p>Incidentes registrados por la red de brigadistas</p>
+                    </div>
+                    <button
+                      onClick={() => setActiveSection("reports")}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 4,
+                        color: "var(--color-brand-secondary)",
+                        fontSize: 12.5,
+                        fontWeight: 700,
+                        cursor: "pointer",
+                        background: "none",
+                        border: "none",
+                        padding: "4px 8px"
+                      }}
+                    >
+                      <span>Ver todos</span>
+                      <ChevronRight size={14} strokeWidth={2.5} />
+                    </button>
                   </div>
-                </div>
-                <div style={{ padding:"0 20px 16px" }}>
-                  {cases.slice(0,6).map(c => (
-                    <div key={c.id} style={{ display:"flex", alignItems:"center", gap:12, padding:"12px 0", borderBottom:"1px solid var(--color-border)" }}>
-                      <span className="case-id-badge">{c.id}</span>
-                      <div 
-                        onClick={() => (c.image || c.photo) && setLightboxImage({ url: c.image || c.photo, title: `Caso ${c.id} · ${c.diagnosis}` })}
-                        title={(c.image || c.photo) ? "Clic para ampliar foto" : "Sin foto"}
+                  <div style={{ padding: "0 4px", display: "flex", flexDirection: "column", gap: 10 }}>
+                    {cases.slice(0, 5).map(c => (
+                      <div
+                        key={c.id}
                         style={{
-                          width: 40, height: 40, borderRadius: 10, overflow: "hidden",
-                          border: "1px solid var(--color-border)", flexShrink: 0, cursor: (c.image || c.photo) ? "pointer" : "default",
-                          backgroundColor: "var(--color-card-subtle)", display: "flex", alignItems: "center", justifyContent: "center"
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 12,
+                          padding: "10px 12px",
+                          borderRadius: 14,
+                          backgroundColor: "var(--color-card-subtle)",
+                          border: "1px solid var(--color-border)",
+                          transition: "all 0.2s ease"
                         }}
                       >
-                        {(c.image || c.photo) ? (
-                          <img src={c.image || c.photo} alt={c.diagnosis} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                        ) : (
-                          <span style={{ fontSize: 16 }}>🌿</span>
-                        )}
-                      </div>
-                      <div style={{ flex:1, minWidth: 0 }}>
-                        <div style={{ fontSize:13.5, fontWeight:700, color:"var(--color-text-dark)", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>
-                          {c.diagnosis}
+                        <span className="case-id-badge">{c.id}</span>
+                        <div
+                          onClick={() => (c.image || c.photo) && setLightboxImage({ url: c.image || c.photo, title: `Caso ${c.id} · ${c.diagnosis}` })}
+                          title={(c.image || c.photo) ? "Clic para ampliar foto" : "Sin foto"}
+                          style={{
+                            width: 42,
+                            height: 42,
+                            borderRadius: 10,
+                            overflow: "hidden",
+                            border: "1.5px solid var(--color-border)",
+                            flexShrink: 0,
+                            cursor: (c.image || c.photo) ? "pointer" : "default",
+                            backgroundColor: "var(--color-card-bg)",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center"
+                          }}
+                        >
+                          {(c.image || c.photo) ? (
+                            <img src={c.image || c.photo} alt={c.diagnosis} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                          ) : (
+                            <span style={{ fontSize: 18 }}>🌿</span>
+                          )}
                         </div>
-                        <div style={{ fontSize:11.5, color:"var(--color-text-muted)", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>
-                          {c.location} · {c.farmer}
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontSize: 13.5, fontWeight: 800, color: "var(--color-text-dark)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                            {c.diagnosis}
+                          </div>
+                          <div style={{ fontSize: 11.5, color: "var(--color-text-muted)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                            {c.location} · {c.farmer}
+                          </div>
                         </div>
+                        <div style={{ textAlign: "right", display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 }}>
+                          <span style={{ fontSize: 13, fontWeight: 900, color: "#10B981" }}>{c.confidence}%</span>
+                          <SBadge s={c.status} />
+                        </div>
+                        <button
+                          onClick={() => openPrescription(c)}
+                          title="Ficha y Receta Fitosanitaria"
+                          style={{
+                            padding: "6px 8px",
+                            borderRadius: 8,
+                            backgroundColor: "var(--color-card-bg)",
+                            border: "1px solid var(--color-border)",
+                            color: "var(--color-text-muted)",
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center"
+                          }}
+                          onMouseOver={e => { e.currentTarget.style.borderColor = "var(--color-brand-secondary)"; e.currentTarget.style.color = "var(--color-brand-secondary)"; }}
+                          onMouseOut={e => { e.currentTarget.style.borderColor = "var(--color-border)"; e.currentTarget.style.color = "var(--color-text-muted)"; }}
+                        >
+                          <FileText size={15} />
+                        </button>
                       </div>
-                      <span style={{ fontSize:13, fontWeight:800, color:"#10B981" }}>{c.confidence}%</span>
-                      <SBadge s={c.status}/>
+                    ))}
+                    {cases.length === 0 && (
+                      <p style={{ color: "var(--color-text-muted)", textAlign: "center", padding: "28px 0", fontSize: 13 }}>
+                        Sin diagnósticos aún. Usa la app móvil para registrar el primer caso.
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Columna Derecha: Alertas y Protocolo Agronómico */}
+                <div className="panel-card" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                  <div>
+                    <div className="panel-card-header">
+                      <div className="panel-card-title-group">
+                        <h2 style={{ display: "flex", alignItems: "center", gap: 8, color: "#EF4444" }}>
+                          <AlertTriangle size={18} color="#EF4444" />
+                          Protocolo de Acción Rápida
+                        </h2>
+                        <p>Medidas fitosanitarias recomendadas</p>
+                      </div>
+                      <span style={{
+                        fontSize: 10.5, fontWeight: 800, padding: "3px 8px", borderRadius: 8,
+                        backgroundColor: "rgba(239, 68, 68, 0.12)", color: "#EF4444", border: "1px solid rgba(239, 68, 68, 0.25)"
+                      }}>
+                        Prioridad Alta
+                      </span>
                     </div>
-                  ))}
-                  {cases.length===0 && <p style={{ color:"var(--color-text-muted)", textAlign:"center", padding:"28px 0", fontSize:13 }}>Sin diagnósticos aún. Usa la app móvil para registrar el primer caso.</p>}
+
+                    <div style={{ marginTop: 14, display: "flex", flexDirection: "column", gap: 10 }}>
+                      <div style={{
+                        padding: "10px 12px", borderRadius: 12,
+                        backgroundColor: "rgba(245, 158, 11, 0.08)", border: "1px solid rgba(245, 158, 11, 0.2)",
+                        display: "flex", gap: 10, alignItems: "flex-start"
+                      }}>
+                        <span style={{ fontSize: 16 }}>⚠️</span>
+                        <p style={{ margin: 0, fontSize: 12, color: "var(--color-text-dark)", lineHeight: 1.4, fontWeight: 500 }}>
+                          La <strong>Monilia</strong> representa el 40% de los focos detectados. Se recomienda aislar lotes infectados antes de la esporulación.
+                        </p>
+                      </div>
+
+                      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                        {[
+                          { step: "1", title: "Corte y Remoción Preventiva", desc: "Retira mazorcas infectadas semanalmente antes del polvillo blanco." },
+                          { step: "2", title: "Cobertura de Hojarasca", desc: "Deposita los frutos al pie del árbol y cúbrelos con abundante materia orgánica seca." },
+                          { step: "3", title: "Desinfección de Herramientas", desc: "Aplica alcohol al 70% o solución clorada a machetes y tijeras de podar." }
+                        ].map(st => (
+                          <div key={st.step} style={{ display: "flex", gap: 10, alignItems: "flex-start", padding: "8px 10px", borderRadius: 10, backgroundColor: "var(--color-card-subtle)" }}>
+                            <span style={{
+                              width: 20, height: 20, borderRadius: "50%", backgroundColor: "var(--color-brand-secondary)",
+                              color: "#0B192C", fontSize: 11, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
+                            }}>
+                              {st.step}
+                            </span>
+                            <div>
+                              <div style={{ fontSize: 12, fontWeight: 800, color: "var(--color-text-dark)" }}>{st.title}</div>
+                              <div style={{ fontSize: 11, color: "var(--color-text-muted)", lineHeight: 1.35 }}>{st.desc}</div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ display: "flex", gap: 10, marginTop: 16, paddingTop: 12, borderTop: "1px solid var(--color-border)" }}>
+                    <button
+                      onClick={() => setActiveSection("map")}
+                      style={{
+                        flex: 1,
+                        padding: "10px 14px",
+                        borderRadius: 12,
+                        backgroundColor: "var(--color-card-subtle)",
+                        border: "1px solid var(--color-border)",
+                        color: "var(--color-text-dark)",
+                        fontSize: 12,
+                        fontWeight: 700,
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 6,
+                        transition: "all 0.2s ease"
+                      }}
+                      onMouseOver={e => { e.currentTarget.style.borderColor = "var(--color-brand-secondary)"; e.currentTarget.style.color = "var(--color-brand-secondary)"; }}
+                      onMouseOut={e => { e.currentTarget.style.borderColor = "var(--color-border)"; e.currentTarget.style.color = "var(--color-text-dark)"; }}
+                    >
+                      <MapPin size={14} />
+                      <span>Ver en Mapa GIS</span>
+                    </button>
+
+                    <button
+                      onClick={() => setActiveSection("reports")}
+                      style={{
+                        flex: 1,
+                        padding: "10px 14px",
+                        borderRadius: 12,
+                        backgroundColor: "var(--color-brand-secondary)",
+                        color: "#0B192C",
+                        fontSize: 12,
+                        fontWeight: 800,
+                        border: "none",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 6,
+                        boxShadow: "0 4px 12px rgba(17,202,160,0.25)",
+                        transition: "all 0.2s ease"
+                      }}
+                      onMouseOver={e => e.currentTarget.style.transform = "translateY(-1px)"}
+                      onMouseOut={e => e.currentTarget.style.transform = "translateY(0)"}
+                    >
+                      <FileSpreadsheet size={14} />
+                      <span>Ver Reportes</span>
+                    </button>
+                  </div>
                 </div>
               </section>
             </>
@@ -1157,18 +1425,52 @@ export default function App() {
 }
 
 function SBadge({ s }) {
-  const m = { "Critico":["#FEF2F2","#DC2626","#FECACA"], "En seguimiento":["#FFFBEB","#D97706","#FDE68A"], "Resuelto":["#F0FDF4","#16A34A","#BBF7D0"] };
-  const [bg,color,border] = m[s] || ["#F8FAFC","#64748B","#E2E8F0"];
-  return <span style={{ fontSize:11, fontWeight:700, padding:"3px 10px", borderRadius:20, backgroundColor:bg, color, border:`1px solid ${border}`, whiteSpace:"nowrap" }}>{s||"Sin estado"}</span>;
+  const m = {
+    "Critico": ["rgba(239, 68, 68, 0.15)", "#EF4444", "rgba(239, 68, 68, 0.35)"],
+    "En seguimiento": ["rgba(245, 158, 11, 0.15)", "#F59E0B", "rgba(245, 158, 11, 0.35)"],
+    "Resuelto": ["rgba(16, 185, 129, 0.15)", "#10B981", "rgba(16, 185, 129, 0.35)"]
+  };
+  const [bg, color, border] = m[s] || ["rgba(148, 163, 184, 0.15)", "#94A3B8", "rgba(148, 163, 184, 0.3)"];
+  return (
+    <span style={{ fontSize: 11, fontWeight: 800, padding: "3px 10px", borderRadius: 20, backgroundColor: bg, color, border: `1px solid ${border}`, whiteSpace: "nowrap" }}>
+      {s || "Sin estado"}
+    </span>
+  );
 }
 
 function MModal({ onClose, title, children }) {
   return (
-    <div style={{ position:"fixed", inset:0, zIndex:9999, display:"flex", alignItems:"center", justifyContent:"center", background:"rgba(15,23,42,0.65)", backdropFilter:"blur(6px)" }}>
-      <div style={{ background:"#fff", borderRadius:20, padding:26, width:"100%", maxWidth:560, maxHeight:"88vh", overflowY:"auto", boxShadow:"0 24px 64px rgba(0,0,0,0.25)" }}>
-        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:18 }}>
-          <h3 style={{ fontSize:17, fontWeight:800, color:"#1E293B" }}>{title}</h3>
-          <button onClick={onClose} style={{ background:"#F1F5F9", border:"none", borderRadius:8, padding:8, cursor:"pointer" }}><X size={15}/></button>
+    <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(10, 15, 29, 0.75)", backdropFilter: "blur(8px)" }}>
+      <div style={{
+        background: "var(--color-card-bg, #121C30)",
+        color: "var(--color-text-dark, #F8FAFC)",
+        borderRadius: 20,
+        padding: 26,
+        width: "100%",
+        maxWidth: 580,
+        maxHeight: "88vh",
+        overflowY: "auto",
+        boxShadow: "0 24px 64px rgba(0, 0, 0, 0.45)",
+        border: "1px solid var(--color-border)"
+      }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18, borderBottom: "1px solid var(--color-border)", paddingBottom: 12 }}>
+          <h3 style={{ fontSize: 17, fontWeight: 800, color: "var(--color-text-dark)" }}>{title}</h3>
+          <button
+            onClick={onClose}
+            style={{
+              background: "var(--color-card-subtle)",
+              color: "var(--color-text-muted)",
+              border: "1px solid var(--color-border)",
+              borderRadius: 8,
+              padding: 8,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+          >
+            <X size={15} />
+          </button>
         </div>
         {children}
       </div>

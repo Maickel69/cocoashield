@@ -466,6 +466,19 @@ button:focus-visible {
   }
 }
 
+/* Dashboard Bottom Split Zone */
+.dashboard-bottom-grid {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 20px;
+}
+
+@media (max-width: 1080px) {
+  .dashboard-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .panel-card {
   background-color: var(--color-card-bg);
   border: 1px solid var(--color-border);
